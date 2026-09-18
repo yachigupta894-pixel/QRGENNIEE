@@ -1,18 +1,22 @@
 // server.js
 
-// Import required packages
+// ===============================
+// IMPORT REQUIRED PACKAGES
+// ===============================
+
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
 require("dotenv").config();
 
-// Create Express application
-const app = express();
 const connectDB = require("./db");
 
-// Port
+// Create Express application
+const app = express();
+
+// Render provides PORT through environment variables
 const PORT = process.env.PORT || 5000;
+
 
 // ===============================
 // MIDDLEWARE
@@ -27,21 +31,14 @@ app.use(express.json());
 // Accept form data
 app.use(express.urlencoded({ extended: true }));
 
-// Serve frontend files
+
+// ===============================
+// SERVE FRONTEND
+// ===============================
+
+// Frontend files are inside the public folder
 app.use(express.static(path.join(__dirname, "public")));
 
-// ===============================
-// MONGODB CONNECTION
-// ===============================
-
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("MongoDB connected successfully");
-  })
-  .catch((error) => {
-    console.error("MongoDB connection failed:", error.message);
-  });
 
 // ===============================
 // TEST ROUTE
@@ -50,9 +47,10 @@ mongoose
 app.get("/api", (req, res) => {
   res.json({
     success: true,
-    message: "QR Genie API is running 🚀",
+    message: "QR Genie API is running 🚀"
   });
 });
+
 
 // ===============================
 // QR HISTORY ROUTES
@@ -64,22 +62,24 @@ app.get("/api/history", async (req, res) => {
     const QRHistory = require("./models/QRHistory");
 
     const history = await QRHistory.find().sort({
-      createdAt: -1,
+      createdAt: -1
     });
 
     res.json({
       success: true,
-      data: history,
+      data: history
     });
+
   } catch (error) {
-    console.error(error);
+    console.error("Fetch QR history error:", error);
 
     res.status(500).json({
       success: false,
-      message: "Failed to fetch QR history",
+      message: "Failed to fetch QR history"
     });
   }
 });
+
 
 // Save generated QR
 app.post("/api/history", async (req, res) => {
@@ -91,7 +91,7 @@ app.post("/api/history", async (req, res) => {
       type,
       size,
       qrColor,
-      bgColor,
+      bgColor
     } = req.body;
 
     const newQR = new QRHistory({
@@ -99,7 +99,7 @@ app.post("/api/history", async (req, res) => {
       type,
       size,
       qrColor,
-      bgColor,
+      bgColor
     });
 
     const savedQR = await newQR.save();
@@ -107,17 +107,19 @@ app.post("/api/history", async (req, res) => {
     res.status(201).json({
       success: true,
       message: "QR saved successfully",
-      data: savedQR,
+      data: savedQR
     });
+
   } catch (error) {
-    console.error(error);
+    console.error("Save QR error:", error);
 
     res.status(500).json({
       success: false,
-      message: "Failed to save QR",
+      message: "Failed to save QR"
     });
   }
 });
+
 
 // Delete QR history item
 app.delete("/api/history/:id", async (req, res) => {
@@ -128,19 +130,21 @@ app.delete("/api/history/:id", async (req, res) => {
 
     res.json({
       success: true,
-      message: "QR history deleted",
+      message: "QR history deleted"
     });
+
   } catch (error) {
-    console.error(error);
+    console.error("Delete QR history error:", error);
 
     res.status(500).json({
       success: false,
-      message: "Failed to delete history",
+      message: "Failed to delete history"
     });
   }
 });
 
-// Delete complete history
+
+// Delete complete QR history
 app.delete("/api/history", async (req, res) => {
   try {
     const QRHistory = require("./models/QRHistory");
@@ -149,20 +153,22 @@ app.delete("/api/history", async (req, res) => {
 
     res.json({
       success: true,
-      message: "All QR history deleted",
+      message: "All QR history deleted"
     });
+
   } catch (error) {
-    console.error(error);
+    console.error("Delete all QR history error:", error);
 
     res.status(500).json({
       success: false,
-      message: "Failed to delete history",
+      message: "Failed to delete history"
     });
   }
 });
 
+
 // ===============================
-// SCAN HISTORY
+// SCAN HISTORY ROUTES
 // ===============================
 
 // Get scan history
@@ -171,22 +177,24 @@ app.get("/api/scans", async (req, res) => {
     const ScanHistory = require("./models/ScanHistory");
 
     const scans = await ScanHistory.find().sort({
-      createdAt: -1,
+      createdAt: -1
     });
 
     res.json({
       success: true,
-      data: scans,
+      data: scans
     });
+
   } catch (error) {
-    console.error(error);
+    console.error("Fetch scan history error:", error);
 
     res.status(500).json({
       success: false,
-      message: "Failed to fetch scan history",
+      message: "Failed to fetch scan history"
     });
   }
 });
+
 
 // Save scanned QR
 app.post("/api/scans", async (req, res) => {
@@ -196,13 +204,13 @@ app.post("/api/scans", async (req, res) => {
     const {
       result,
       type,
-      device,
+      device
     } = req.body;
 
     const newScan = new ScanHistory({
       result,
       type,
-      device,
+      device
     });
 
     const savedScan = await newScan.save();
@@ -210,19 +218,21 @@ app.post("/api/scans", async (req, res) => {
     res.status(201).json({
       success: true,
       message: "Scan saved successfully",
-      data: savedScan,
+      data: savedScan
     });
+
   } catch (error) {
-    console.error(error);
+    console.error("Save scan error:", error);
 
     res.status(500).json({
       success: false,
-      message: "Failed to save scan",
+      message: "Failed to save scan"
     });
   }
 });
 
-// Delete scan history
+
+// Delete scan history item
 app.delete("/api/scans/:id", async (req, res) => {
   try {
     const ScanHistory = require("./models/ScanHistory");
@@ -231,20 +241,22 @@ app.delete("/api/scans/:id", async (req, res) => {
 
     res.json({
       success: true,
-      message: "Scan deleted",
+      message: "Scan deleted"
     });
+
   } catch (error) {
-    console.error(error);
+    console.error("Delete scan error:", error);
 
     res.status(500).json({
       success: false,
-      message: "Failed to delete scan",
+      message: "Failed to delete scan"
     });
   }
 });
 
+
 // ===============================
-// DASHBOARD STATS
+// DASHBOARD STATISTICS
 // ===============================
 
 app.get("/api/stats", async (req, res) => {
@@ -259,49 +271,64 @@ app.get("/api/stats", async (req, res) => {
       success: true,
       data: {
         totalQRs,
-        totalScans,
-      },
+        totalScans
+      }
     });
+
   } catch (error) {
-    console.error(error);
+    console.error("Statistics error:", error);
 
     res.status(500).json({
       success: false,
-      message: "Failed to fetch statistics",
+      message: "Failed to fetch statistics"
     });
   }
 });
+
 
 // ===============================
 // FRONTEND ROUTE
 // ===============================
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.sendFile(
+    path.join(__dirname, "public", "index.html")
+  );
 });
 
+
 // ===============================
-// ERROR HANDLER
+// 404 HANDLER
 // ===============================
 
 app.use((req, res) => {
   res.status(404).json({
     success: false,
-    message: "API route not found",
+    message: "Route not found"
   });
 });
 
+
 // ===============================
-// START SERVER
+// CONNECT DATABASE + START SERVER
 // ===============================
 
-app.listen(PORT, () => {
-  console.log(`QR Genie server running on port ${PORT}`);
-  console.log(`http://localhost:${PORT}`);
-});
-connectDB();
+connectDB()
+  .then(() => {
 
-app.listen(PORT, () => {
-  console.log(`QR Genie server running on port ${PORT}`);
-  console.log(`http://localhost:${PORT}`);
-});
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(
+        `QR Genie server running on port ${PORT}`
+      );
+    });
+
+  })
+  .catch((error) => {
+
+    console.error(
+      "Failed to connect to MongoDB:",
+      error.message
+    );
+
+    process.exit(1);
+  });
