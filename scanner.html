@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan a QR code — QR Genie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/dashboard.css">
+<link rel="stylesheet" href="css/responsive.css">
+<style>
+  :root {
+    --ink: #14101f;
+    --surface: #1e1830;
+    --surface-raised: #261f3d;
+    --gold: #e8b85c;
+    --gold-soft: #f0cd85;
+    --violet: #8b7ce0;
+    --text: #f2eee6;
+    --muted: #a79fc2;
+    --line: rgba(242, 238, 230, 0.1);
+    --radius-sm: 10px;
+    --radius-md: 16px;
+  }
+
+  [data-theme="light"] {
+    --ink: #faf8f4;
+    --surface: #ffffff;
+    --surface-raised: #f3eee2;
+    --text: #1e1830;
+    --muted: #6b6280;
+    --line: rgba(30, 24, 48, 0.1);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--ink);
+    color: var(--text);
+    font-family: 'Manrope', sans-serif;
+  }
+
+  h1, h2, h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+
+  /* ---------- Header (shared identity with index.html) ---------- */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--ink) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-row { display: flex; align-items: center; justify-content: space-between; height: 76px; }
+
+  .brand { display: flex; align-items: center; gap: 10px; font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 600; }
+  .brand-mark { width: 30px; height: 30px; flex-shrink: 0; }
+
+  nav.links { display: flex; align-items: center; gap: 36px; }
+  nav.links .item { font-size: 0.95rem; color: var(--muted); transition: color 0.15s ease; }
+  nav.links .item.active { color: var(--gold); }
+  nav.links .item:hover, nav.links .item:focus-visible { color: var(--text); }
+
+  .nav-actions { display: flex; align-items: center; gap: 14px; }
+
+  .icon-btn {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface); border: 1px solid var(--line);
+    cursor: pointer; color: var(--text);
+  }
+  .icon-btn:hover { background: var(--surface-raised); }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 20px; border-radius: 999px; font-size: 0.92rem; font-weight: 600;
+    cursor: pointer; border: 1px solid transparent;
+    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    font-family: 'Manrope', sans-serif;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-gold { background: linear-gradient(135deg, var(--gold-soft), var(--gold)); color: #1c1408; }
+  .btn-gold:hover { filter: brightness(1.06); }
+  .btn-ghost { background: transparent; border-color: var(--line); color: var(--text); }
+  .btn-ghost:hover { background: var(--surface); }
+  .btn-sm { padding: 8px 14px; font-size: 0.82rem; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ---------- Page header ---------- */
+  .page-head { padding: 48px 0 8px; }
+  .page-head .eyebrow {
+    color: var(--gold); font-size: 0.85rem; font-weight: 600;
+    display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+  }
+  .page-head h1 { font-size: 2.1rem; }
+  .page-head p { color: var(--muted); margin-top: 8px; max-width: 52ch; }
+
+  /* ---------- Layout ---------- */
+  .scan-layout {
+    padding: 36px 0 100px;
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 28px;
+    align-items: start;
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 28px;
+  }
+
+  .panel + .panel { margin-top: 20px; }
+
+  .panel h2 { font-size: 1.15rem; margin-bottom: 4px; }
+  .panel .panel-sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 20px; }
+
+  .panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+
+  /* ---------- Viewfinder ---------- */
+  .stage {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--ink);
+    border: 1px solid var(--line);
+  }
+
+  #reader { position: absolute; inset: 0; border: 0 !important; }
+  #reader video { width: 100% !important; height: 100% !important; object-fit: cover; display: block; }
+  /* The library injects its own chrome — we draw our own */
+  #reader__dashboard, #reader img[alt="Info icon"] { display: none !important; }
+
+  .stage-idle {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 8px; text-align: center; padding: 24px;
+  }
+  .stage-idle .halo {
+    position: absolute; width: 220px; height: 220px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,184,92,0.18), transparent 70%);
+    filter: blur(8px); pointer-events: none;
+  }
+  .stage-idle strong { font-family: 'Fraunces', serif; font-size: 1.15rem; font-weight: 500; position: relative; }
+  .stage-idle span { color: var(--muted); font-size: 0.85rem; max-width: 34ch; position: relative; line-height: 1.55; }
+
+  /* Corner brackets, shaped like QR finder patterns */
+  .corner {
+    position: absolute; width: 38px; height: 38px;
+    border: 3px solid var(--gold); opacity: 0.4;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+  }
+  .c-tl { top: 18px; left: 18px;  border-right: 0; border-bottom: 0; border-top-left-radius: 10px; }
+  .c-tr { top: 18px; right: 18px; border-left: 0;  border-bottom: 0; border-top-right-radius: 10px; }
+  .c-bl { bottom: 18px; left: 18px;  border-right: 0; border-top: 0; border-bottom-left-radius: 10px; }
+  .c-br { bottom: 18px; right: 18px; border-left: 0;  border-top: 0; border-bottom-right-radius: 10px; }
+
+  .stage[data-state="live"] .corner,
+  .stage[data-state="hit"] .corner { opacity: 1; }
+  .stage[data-state="live"] .stage-idle,
+  .stage[data-state="hit"] .stage-idle { display: none; }
+
+  .beam {
+    position: absolute; left: 18px; right: 18px; top: 18px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    box-shadow: 0 0 18px 2px rgba(232, 184, 92, 0.45);
+    opacity: 0; pointer-events: none;
+  }
+  .stage[data-state="live"] .beam { opacity: 1; animation: sweep 2.6s ease-in-out infinite; }
+
+  @keyframes sweep {
+    0%, 100% { top: 18px; }
+    50% { top: calc(100% - 20px); }
+  }
+
+  .stage[data-state="hit"] { border-color: var(--gold); }
+  .stage[data-state="hit"]::after {
+    content: ""; position: absolute; inset: 0;
+    background: rgba(232, 184, 92, 0.16);
+    animation: flash 0.5s ease forwards;
+    pointer-events: none;
+  }
+  @keyframes flash { to { opacity: 0; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .beam { animation: none !important; }
+    .stage[data-state="hit"]::after { animation: none; opacity: 0; }
+  }
+
+  /* ---------- Controls ---------- */
+  .controls {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 10px;
+    margin-top: 20px;
+  }
+  .controls .spacer { flex: 1; }
+
+  .camera-pick {
+    display: flex; align-items: center; gap: 8px;
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 6px 8px 6px 14px; background: var(--ink);
+  }
+  .camera-pick label { font-size: 0.78rem; color: var(--muted); }
+  .camera-pick select {
+    background: none; border: 0; color: var(--text);
+    font-family: 'Manrope', sans-serif; font-size: 0.85rem;
+    max-width: 150px; cursor: pointer;
+  }
+  .camera-pick select:focus { outline: none; }
+  .camera-pick select option { background: var(--surface); color: var(--text); }
+
+  .status { margin-top: 14px; font-size: 0.84rem; color: var(--muted); min-height: 20px; line-height: 1.5; }
+  .status.error { color: #f0907f; }
+
+  /* ---------- Upload ---------- */
+  .file-drop {
+    border: 1px dashed var(--line); border-radius: var(--radius-sm);
+    padding: 22px; display: flex; align-items: center; gap: 14px; cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .file-drop:hover, .file-drop.dragging { border-color: var(--gold); background: var(--surface-raised); }
+  .file-drop .ic {
+    width: 40px; height: 40px; border-radius: 10px; background: var(--surface-raised);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .file-drop .ic svg { width: 18px; height: 18px; color: var(--gold); }
+  .file-drop .txt strong { display: block; font-size: 0.88rem; }
+  .file-drop .txt span { color: var(--muted); font-size: 0.78rem; }
+
+  /* ---------- Result ---------- */
+  .result-panel { position: sticky; top: 96px; }
+
+  .result-empty {
+    text-align: center; padding: 26px 10px 18px; color: var(--muted); font-size: 0.85rem; line-height: 1.55;
+  }
+  .result-empty .glyph {
+    width: 46px; height: 46px; margin: 0 auto 14px; display: block; opacity: 0.55;
+  }
+
+  .chip {
+    display: inline-block; padding: 4px 12px; border-radius: 999px;
+    background: var(--surface-raised); color: var(--gold);
+    font-size: 0.74rem; font-weight: 700; letter-spacing: 0.02em;
+    margin-bottom: 12px;
+  }
+
+  .result-value {
+    display: block; padding: 14px 16px;
+    border: 1px solid var(--line); border-radius: var(--radius-sm);
+    background: var(--ink); font-size: 0.9rem; line-height: 1.6;
+    word-break: break-word; white-space: pre-wrap;
+    max-height: 190px; overflow-y: auto;
+  }
+
+  .result-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+  .result-actions .btn { flex: 1; justify-content: center; min-width: 110px; }
+
+  .result-time { margin-top: 14px; font-size: 0.78rem; color: var(--muted); }
+
+  /* ---------- Session list ---------- */
+  .session-list { list-style: none; margin: 0; padding: 0; }
+  .session-list li {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 14px;
+    padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 0.86rem;
+  }
+  .session-list li:last-child { border-bottom: 0; }
+  .session-list .txt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .session-list .when { color: var(--muted); font-size: 0.76rem; flex-shrink: 0; }
+
+  .session-empty { color: var(--muted); font-size: 0.85rem; line-height: 1.55; }
+
+  /* ---------- Toast ---------- */
+  .toast {
+    position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%);
+    padding: 12px 22px; border-radius: 999px;
+    background: var(--surface-raised); border: 1px solid var(--line);
+    color: var(--text); font-size: 0.86rem; font-weight: 600;
+    z-index: 80; opacity: 0; pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(-4px); }
+
+  @media (max-width: 880px) {
+    .scan-layout { grid-template-columns: 1fr; }
+    .result-panel { position: static; }
+    nav.links { display: none; }
+    .stage { aspect-ratio: 3 / 4; }
+    .controls .spacer { display: none; }
+    .camera-pick { width: 100%; }
+    .camera-pick select { max-width: none; flex: 1; }
+  }
+</style>
+</head>
+<body data-theme="dark">
+
+<header>
+  <div class="wrap nav-row">
+    <a class="brand" href="index.html">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="4" width="9" height="9" rx="2" stroke="#e8b85c" stroke-width="2"/>
+        <rect x="19" y="4" width="9" height="9" rx="2" stroke="#e8b85c" stroke-width="2"/>
+        <rect x="4" y="19" width="9" height="9" rx="2" stroke="#e8b85c" stroke-width="2"/>
+        <rect x="20.5" y="20.5" width="6" height="6" rx="1.5" fill="#e8b85c"/>
+      </svg>
+      QR Genie
+    </a>
+    <nav class="links">
+      <a class="item" href="create.html">Create</a>
+      <a class="item active" href="scanner.html">Scan</a>
+      <a class="item" href="history.html">History</a>
+      <a class="item" href="analytics.html">Analytics</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle dark mode">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+      <a class="icon-btn" href="account.html" aria-label="Account">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+      </a>
+      <a class="btn btn-gold" href="create.html">Create a QR</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <div class="eyebrow">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM20 14v3M14 20h3M20 20v.01"/></svg>
+      Scan
+    </div>
+    <h1>Hold it up, we'll read it.</h1>
+    <p>Point your camera at any QR code, or drop in a screenshot. Decoding happens on your device — nothing is uploaded.</p>
+  </div>
+
+  <div class="scan-layout">
+    <div class="scan-col">
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Camera</h2>
+          <span class="panel-sub" id="liveLabel" style="margin:0;">Idle</span>
+        </div>
+        <p class="panel-sub">Your browser will ask for permission the first time.</p>
+
+        <div class="stage" id="stage" data-state="idle">
+          <div id="reader"></div>
+
+          <div class="stage-idle" id="stageIdle">
+            <div class="halo"></div>
+            <strong>Camera's asleep</strong>
+            <span>Tap start and hold a code inside the brackets — it reads the moment it focuses.</span>
+          </div>
+
+          <span class="corner c-tl"></span>
+          <span class="corner c-tr"></span>
+          <span class="corner c-bl"></span>
+          <span class="corner c-br"></span>
+          <span class="beam"></span>
+        </div>
+
+        <div class="controls">
+          <button class="btn btn-gold" id="startBtn">Start scanning</button>
+          <button class="btn btn-ghost" id="stopBtn" disabled>Stop</button>
+          <button class="btn btn-ghost btn-sm" id="torchBtn" style="display:none;">Flash on</button>
+          <span class="spacer"></span>
+          <div class="camera-pick">
+            <label for="cameraSelect">Camera</label>
+            <select id="cameraSelect" disabled>
+              <option value="">Detecting…</option>
+            </select>
+          </div>
+        </div>
+
+        <p class="status" id="scanStatus"></p>
+      </div>
+
+      <div class="panel">
+        <h2>From an image</h2>
+        <p class="panel-sub">Already have a screenshot or photo of a code? Decode it without the camera.</p>
+        <label class="file-drop" id="fileDrop">
+          <span class="ic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16l4.5-6 4 5 2.5-3L20 16"/><rect x="3" y="4" width="18" height="16" rx="2"/></svg>
+          </span>
+          <span class="txt">
+            <strong>Drop an image here, or choose a file</strong>
+            <span>PNG, JPG or WebP</span>
+          </span>
+          <input type="file" id="fileInput" accept="image/*" style="display:none;">
+        </label>
+        <p class="status" id="fileStatus"></p>
+      </div>
+
+    </div>
+
+    <div class="result-panel">
+      <div class="panel">
+        <h2>Result</h2>
+        <p class="panel-sub">What the code holds.</p>
+
+        <div class="result-empty" id="resultEmpty">
+          <svg class="glyph" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="9" height="9" rx="2" stroke="currentColor" stroke-width="2"/>
+            <rect x="19" y="4" width="9" height="9" rx="2" stroke="currentColor" stroke-width="2"/>
+            <rect x="4" y="19" width="9" height="9" rx="2" stroke="currentColor" stroke-width="2"/>
+            <rect x="20.5" y="20.5" width="6" height="6" rx="1.5" fill="currentColor"/>
+          </svg>
+          Nothing scanned yet. Whatever you catch shows up here, ready to copy, open or keep.
+        </div>
+
+        <div id="resultBody" style="display:none;">
+          <span class="chip" id="resultType">Text</span>
+          <div class="result-value" id="resultValue"></div>
+          <div class="result-actions">
+            <button class="btn btn-ghost btn-sm" id="copyBtn">Copy</button>
+            <a class="btn btn-ghost btn-sm" id="openBtn" target="_blank" rel="noopener noreferrer" style="display:none;">Open</a>
+            <button class="btn btn-gold btn-sm" id="saveBtn">Save to history</button>
+          </div>
+          <div class="result-actions" style="margin-top:10px;">
+            <button class="btn btn-ghost btn-sm" id="againBtn">Scan another</button>
+          </div>
+          <p class="result-time" id="resultTime"></p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>This session</h2>
+          <a class="panel-sub" href="#" id="clearSession" style="margin:0; text-decoration:underline;">Clear</a>
+        </div>
+        <ul class="session-list" id="sessionList"></ul>
+        <p class="session-empty" id="sessionEmpty">Codes you scan on this visit collect here. Sign in to keep them for good.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/scanner.js"></script>
+<script>
+  // ---------- Theme ----------
+  const themeToggle = document.getElementById('themeToggle');
+  const body = document.body;
+  const storedTheme = localStorage.getItem('qr-genie-theme');
+  if (storedTheme) body.setAttribute('data-theme', storedTheme);
+  themeToggle.addEventListener('click', () => {
+    const next = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    body.setAttribute('data-theme', next);
+    localStorage.setItem('qr-genie-theme', next);
+  });
+
+  // ---------- Elements ----------
+  const stage         = document.getElementById('stage');
+  const liveLabel     = document.getElementById('liveLabel');
+  const startBtn      = document.getElementById('startBtn');
+  const stopBtn       = document.getElementById('stopBtn');
+  const torchBtn      = document.getElementById('torchBtn');
+  const cameraSelect  = document.getElementById('cameraSelect');
+  const scanStatus    = document.getElementById('scanStatus');
+  const fileDrop      = document.getElementById('fileDrop');
+  const fileInput     = document.getElementById('fileInput');
+  const fileStatus    = document.getElementById('fileStatus');
+  const resultEmpty   = document.getElementById('resultEmpty');
+  const resultBody    = document.getElementById('resultBody');
+  const resultType    = document.getElementById('resultType');
+  const resultValue   = document.getElementById('resultValue');
+  const resultTime    = document.getElementById('resultTime');
+  const copyBtn       = document.getElementById('copyBtn');
+  const openBtn       = document.getElementById('openBtn');
+  const saveBtn       = document.getElementById('saveBtn');
+  const againBtn      = document.getElementById('againBtn');
+  const sessionList   = document.getElementById('sessionList');
+  const sessionEmpty  = document.getElementById('sessionEmpty');
+  const clearSession  = document.getElementById('clearSession');
+  const toastEl       = document.getElementById('toast');
+
+  let scanner = null;
+  let running = false;
+  let torchOn = false;
+  let lastResult = null;
+  let session = [];
+
+  // ---------- Toast ----------
+  let toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2400);
+  }
+
+  function setStatus(el, msg, isError) {
+    el.textContent = msg || '';
+    el.classList.toggle('error', !!isError);
+  }
+
+  // ---------- Work out what kind of code it is ----------
+  function classify(text) {
+    const t = text.trim();
+    if (/^https?:\/\//i.test(t))        return { type: 'Link',    href: t };
+    if (/^mailto:/i.test(t))            return { type: 'Email',   href: t };
+    if (/^tel:/i.test(t))               return { type: 'Phone',   href: t };
+    if (/^sms:/i.test(t))               return { type: 'SMS',     href: t };
+    if (/^WIFI:/i.test(t))              return { type: 'Wi-Fi',   href: null };
+    if (/^BEGIN:VCARD/i.test(t))        return { type: 'Contact', href: null };
+    if (/^geo:/i.test(t))               return { type: 'Location',href: t };
+    if (/^[\w.+-]+@[\w-]+\.[\w.]+$/.test(t)) return { type: 'Email', href: 'mailto:' + t };
+    if (/^www\./i.test(t))              return { type: 'Link',    href: 'https://' + t };
+    return { type: 'Text', href: null };
+  }
+
+  // ---------- Show a decoded result ----------
+  function showResult(text) {
+    const info = classify(text);
+    lastResult = { content: text, type: info.type, at: new Date() };
+
+    resultType.textContent = info.type;
+    resultValue.textContent = text;
+    resultTime.textContent = 'Scanned at ' + lastResult.at.toLocaleTimeString();
+
+    if (info.href) {
+      openBtn.href = info.href;
+      openBtn.style.display = 'inline-flex';
+      openBtn.textContent = info.type === 'Link' ? 'Open link' : 'Open';
+    } else {
+      openBtn.style.display = 'none';
+    }
+
+    resultEmpty.style.display = 'none';
+    resultBody.style.display = 'block';
+
+    addToSession(lastResult);
+
+    if (navigator.vibrate) navigator.vibrate(60);
+  }
+
+  // ---------- Session list ----------
+  function addToSession(entry) {
+    session.unshift(entry);
+    if (session.length > 12) session.pop();
+    renderSession();
+  }
+
+  function renderSession() {
+    sessionList.innerHTML = '';
+    if (!session.length) {
+      sessionEmpty.style.display = 'block';
+      return;
+    }
+    sessionEmpty.style.display = 'none';
+    session.forEach(item => {
+      const li = document.createElement('li');
+      const txt = document.createElement('span');
+      txt.className = 'txt';
+      txt.textContent = item.content;
+      const when = document.createElement('span');
+      when.className = 'when';
+      when.textContent = item.at.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      li.append(txt, when);
+      sessionList.appendChild(li);
+    });
+  }
+
+  clearSession.addEventListener('click', (e) => {
+    e.preventDefault();
+    session = [];
+    renderSession();
+  });
+
+  renderSession();
+
+  // ---------- Camera list ----------
+  async function loadCameras() {
+    try {
+      const devices = await Html5Qrcode.getCameras();
+      if (!devices.length) {
+        setStatus(scanStatus, 'No camera found on this device. You can still scan from an image below.', true);
+        cameraSelect.innerHTML = '<option value="">No camera</option>';
+        startBtn.disabled = true;
+        return;
+      }
+      cameraSelect.innerHTML = '';
+      devices.forEach((d, i) => {
+        const opt = document.createElement('option');
+        opt.value = d.id;
+        opt.textContent = d.label || ('Camera ' + (i + 1));
+        cameraSelect.appendChild(opt);
+      });
+      // Prefer the rear camera when we can spot it
+      const rear = devices.find(d => /back|rear|environment/i.test(d.label || ''));
+      if (rear) cameraSelect.value = rear.id;
+      cameraSelect.disabled = false;
+    } catch (err) {
+      setStatus(scanStatus, 'Could not list cameras. Allow camera access, then reload.', true);
+    }
+  }
+
+  // ---------- Start / stop ----------
+  async function startScanning() {
+    if (running) return;
+    if (!cameraSelect.value) await loadCameras();
+
+    scanner = scanner || new Html5Qrcode('reader', { verbose: false });
+    setStatus(scanStatus, 'Starting the camera…');
+
+    const config = {
+      fps: 10,
+      qrbox: { width: 240, height: 240 },
+      aspectRatio: window.innerWidth < 880 ? 0.75 : 1.333
+    };
+
+    try {
+      await scanner.start(
+        cameraSelect.value || { facingMode: 'environment' },
+        config,
+        onScanSuccess,
+        () => {} // per-frame misses are noise, ignore them
+      );
+      running = true;
+      stage.dataset.state = 'live';
+      liveLabel.textContent = 'Live';
+      liveLabel.style.color = 'var(--gold)';
+      startBtn.disabled = true;
+      stopBtn.disabled = false;
+      setStatus(scanStatus, 'Looking for a code…');
+      setupTorch();
+    } catch (err) {
+      running = false;
+      stage.dataset.state = 'idle';
+      const msg = /permission|NotAllowed/i.test(String(err))
+        ? 'Camera access was blocked. Allow it in your browser settings, then try again.'
+        : 'The camera would not start. Close other apps using it and try again.';
+      setStatus(scanStatus, msg, true);
+    }
+  }
+
+  async function stopScanning() {
+    if (!running || !scanner) return;
+    try { await scanner.stop(); } catch (e) { /* already stopped */ }
+    running = false;
+    torchOn = false;
+    stage.dataset.state = 'idle';
+    liveLabel.textContent = 'Idle';
+    liveLabel.style.color = '';
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+    torchBtn.style.display = 'none';
+    setStatus(scanStatus, '');
+  }
+
+  function onScanSuccess(decodedText) {
+    showResult(decodedText);
+    stage.dataset.state = 'hit';
+    setStatus(scanStatus, 'Got it. Stopped so you can read the result.');
+    stopScanning().then(() => { stage.dataset.state = 'hit'; });
+  }
+
+  startBtn.addEventListener('click', startScanning);
+  stopBtn.addEventListener('click', stopScanning);
+
+  againBtn.addEventListener('click', () => {
+    stage.dataset.state = 'idle';
+    startScanning();
+  });
+
+  // ---------- Torch, where the device supports it ----------
+  function setupTorch() {
+    try {
+      const caps = scanner.getRunningTrackCapabilities();
+      if (caps && caps.torch) {
+        torchBtn.style.display = 'inline-flex';
+        torchBtn.textContent = 'Flash on';
+      } else {
+        torchBtn.style.display = 'none';
+      }
+    } catch (e) {
+      torchBtn.style.display = 'none';
+    }
+  }
+
+  torchBtn.addEventListener('click', async () => {
+    if (!running || !scanner) return;
+    try {
+      torchOn = !torchOn;
+      await scanner.applyVideoConstraints({ advanced: [{ torch: torchOn }] });
+      torchBtn.textContent = torchOn ? 'Flash off' : 'Flash on';
+    } catch (e) {
+      toast('This camera will not let us control the flash.');
+    }
+  });
+
+  // ---------- Scan from an image ----------
+  async function decodeFile(file) {
+    if (!file) return;
+    if (!/^image\//.test(file.type)) {
+      setStatus(fileStatus, 'That is not an image file.', true);
+      return;
+    }
+    setStatus(fileStatus, 'Reading the image…');
+    const fileScanner = new Html5Qrcode('reader', { verbose: false });
+    try {
+      if (running) await stopScanning();
+      const text = await fileScanner.scanFile(file, false);
+      showResult(text);
+      setStatus(fileStatus, 'Found a code in that image.');
+    } catch (err) {
+      setStatus(fileStatus, 'No QR code found in that image. Try a sharper or less cropped one.', true);
+    } finally {
+      try { fileScanner.clear(); } catch (e) {}
+    }
+  }
+
+  fileInput.addEventListener('change', (e) => decodeFile(e.target.files[0]));
+
+  ['dragenter', 'dragover'].forEach(ev =>
+    fileDrop.addEventListener(ev, (e) => { e.preventDefault(); fileDrop.classList.add('dragging'); })
+  );
+  ['dragleave', 'drop'].forEach(ev =>
+    fileDrop.addEventListener(ev, (e) => { e.preventDefault(); fileDrop.classList.remove('dragging'); })
+  );
+  fileDrop.addEventListener('drop', (e) => {
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    decodeFile(file);
+  });
+
+  // ---------- Copy ----------
+  copyBtn.addEventListener('click', async () => {
+    if (!lastResult) return;
+    try {
+      await navigator.clipboard.writeText(lastResult.content);
+      toast('Copied');
+    } catch (e) {
+      toast('Your browser blocked the copy — select the text instead.');
+    }
+  });
+
+  // ---------- Save to history (backend) ----------
+  saveBtn.addEventListener('click', async () => {
+    if (!lastResult) return;
+    saveBtn.disabled = true;
+    try {
+      const res = await fetch('/api/history/scans', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          content: lastResult.content,
+          type: lastResult.type,
+          scannedAt: lastResult.at.toISOString(),
+          device: navigator.userAgent
+        })
+      });
+      if (res.status === 401) {
+        toast('Sign in to save scans to your history.');
+      } else if (res.ok) {
+        toast('Saved to your history');
+      } else {
+        toast('Could not save that scan. Try again.');
+      }
+    } catch (e) {
+      toast('Backend is not running — start the server to save scans.');
+    } finally {
+      saveBtn.disabled = false;
+    }
+  });
+
+  // ---------- Housekeeping ----------
+  window.addEventListener('beforeunload', () => { if (running) stopScanning(); });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && running) stopScanning();
+  });
+
+  loadCameras();
+</script>
+
+</body>
+</html>

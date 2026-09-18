@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Settings | QR Genie</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Responsive CSS -->
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <style>
+
+        /* =========================
+           SETTINGS PAGE
+        ========================= */
+
+        .settings-page {
+            min-height: calc(100vh - 80px);
+            padding: 50px 20px 70px;
+        }
+
+        .settings-container {
+            width: 100%;
+            max-width: 1050px;
+            margin: auto;
+        }
+
+        .settings-heading {
+            margin-bottom: 30px;
+        }
+
+        .settings-heading h1 {
+            font-family: "Fraunces", serif;
+            font-size: 42px;
+            margin: 0 0 8px;
+        }
+
+        .settings-heading p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 15px;
+        }
+
+
+        /* =========================
+           SETTINGS CARD
+        ========================= */
+
+        .settings-card {
+            background: var(--card-bg, #ffffff);
+            border: 1px solid var(--border-color, #e5e7eb);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 22px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        }
+
+
+        .section-title {
+            margin-bottom: 22px;
+        }
+
+        .section-title h3 {
+            margin: 0 0 5px;
+            font-size: 20px;
+        }
+
+        .section-title p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           SETTING ROW
+        ========================= */
+
+        .setting-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 25px;
+
+            padding: 18px 0;
+
+            border-bottom: 1px solid #edf0f2;
+        }
+
+        .setting-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-info h4 {
+            margin: 0 0 5px;
+            font-size: 15px;
+        }
+
+        .setting-info p {
+            margin: 0;
+            color: #777f89;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+
+        /* =========================
+           TOGGLE SWITCH
+        ========================= */
+
+        .switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            inset: 0;
+
+            background: #d1d5db;
+
+            border-radius: 30px;
+
+            cursor: pointer;
+
+            transition: 0.25s;
+        }
+
+        .slider::before {
+            content: "";
+
+            position: absolute;
+
+            width: 20px;
+            height: 20px;
+
+            left: 3px;
+            top: 3px;
+
+            background: white;
+
+            border-radius: 50%;
+
+            transition: 0.25s;
+        }
+
+        .switch input:checked + .slider {
+            background: #4facfe;
+        }
+
+        .switch input:checked + .slider::before {
+            transform: translateX(22px);
+        }
+
+
+        /* =========================
+           SELECT
+        ========================= */
+
+        .settings-select {
+            min-width: 150px;
+
+            padding: 10px 35px 10px 13px;
+
+            border: 1px solid #dfe3e8;
+
+            border-radius: 10px;
+
+            background: #ffffff;
+
+            font-family: "Manrope", sans-serif;
+
+            font-size: 13px;
+
+            cursor: pointer;
+
+            outline: none;
+        }
+
+        .settings-select:focus {
+            border-color: #4facfe;
+        }
+
+
+        /* =========================
+           QR DEFAULT SETTINGS
+        ========================= */
+
+        .default-grid {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .form-group input {
+            box-sizing: border-box;
+
+            width: 100%;
+
+            padding: 12px 14px;
+
+            border: 1px solid #dfe3e8;
+
+            border-radius: 11px;
+
+            background: #f9fafb;
+
+            font-family: "Manrope", sans-serif;
+
+            font-size: 13px;
+
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #4facfe;
+
+            box-shadow:
+                0 0 0 3px rgba(79, 172, 254, 0.12);
+        }
+
+
+        /* =========================
+           COLOR PICKER
+        ========================= */
+
+        .color-control {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+        .color-control input {
+            width: 48px;
+            height: 38px;
+
+            padding: 2px;
+
+            border: 1px solid #dfe3e8;
+
+            border-radius: 9px;
+
+            background: white;
+
+            cursor: pointer;
+        }
+
+        .color-value {
+            font-size: 12px;
+            color: #777f89;
+        }
+
+
+        /* =========================
+           ACTION BUTTONS
+        ========================= */
+
+        .button-row {
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 12px;
+
+            margin-top: 24px;
+        }
+
+        .save-btn {
+            border: none;
+
+            padding: 12px 21px;
+
+            border-radius: 11px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #4facfe,
+                    #00c6ff
+                );
+
+            color: white;
+
+            font-family: "Manrope", sans-serif;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 8px 20px rgba(79, 172, 254, 0.25);
+        }
+
+        .reset-btn {
+            padding: 12px 20px;
+
+            border: 1px solid #dfe3e8;
+
+            border-radius: 11px;
+
+            background: transparent;
+
+            font-family: "Manrope", sans-serif;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+        .reset-btn:hover {
+            border-color: #4facfe;
+        }
+
+
+        /* =========================
+           DANGER ZONE
+        ========================= */
+
+        .danger-zone {
+            border-color: #ffd7d7;
+
+            background: #fffafa;
+        }
+
+        .danger-title h3 {
+            color: #dc2626;
+        }
+
+        .danger-btn {
+            border: 1px solid #ef4444;
+
+            padding: 10px 17px;
+
+            border-radius: 10px;
+
+            background: transparent;
+
+            color: #dc2626;
+
+            font-family: "Manrope", sans-serif;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+        .danger-btn:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+
+        /* =========================
+           TOAST
+        ========================= */
+
+        .toast {
+            position: fixed;
+
+            right: 25px;
+            bottom: 25px;
+
+            background: #111827;
+
+            color: white;
+
+            padding: 13px 18px;
+
+            border-radius: 12px;
+
+            font-size: 13px;
+
+            opacity: 0;
+
+            transform: translateY(15px);
+
+            pointer-events: none;
+
+            transition: 0.3s;
+
+            z-index: 9999;
+        }
+
+        .toast.show {
+            opacity: 1;
+
+            transform: translateY(0);
+        }
+
+
+        /* =========================
+           DARK MODE
+        ========================= */
+
+        body.dark-mode .settings-heading p,
+        body.dark-mode .section-title p,
+        body.dark-mode .setting-info p,
+        body.dark-mode .color-value {
+            color: #aab2bd;
+        }
+
+        body.dark-mode .settings-card {
+            background: #161b22;
+
+            border-color: #2b3139;
+
+            box-shadow: none;
+        }
+
+        body.dark-mode .setting-row {
+            border-color: #292f36;
+        }
+
+        body.dark-mode .settings-select {
+            background: #0f141a;
+
+            color: white;
+
+            border-color: #303740;
+        }
+
+        body.dark-mode .form-group input {
+            background: #0f141a;
+
+            color: white;
+
+            border-color: #303740;
+        }
+
+        body.dark-mode .reset-btn {
+            color: white;
+
+            border-color: #343b45;
+        }
+
+        body.dark-mode .danger-zone {
+            background: #1b1111;
+
+            border-color: #4a2222;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 700px) {
+
+            .settings-page {
+                padding: 35px 15px 50px;
+            }
+
+            .settings-heading h1 {
+                font-size: 34px;
+            }
+
+            .settings-card {
+                padding: 22px;
+
+                border-radius: 18px;
+            }
+
+            .default-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .setting-row {
+                align-items: flex-start;
+            }
+
+            .settings-select {
+                min-width: 125px;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .setting-row {
+                flex-direction: column;
+            }
+
+            .settings-select,
+            .switch {
+                align-self: flex-start;
+            }
+
+            .button-row {
+                flex-direction: column;
+            }
+
+            .save-btn,
+            .reset-btn,
+            .danger-btn {
+                width: 100%;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="navbar">
+
+        <div class="nav-container">
+
+            <a href="index.html" class="logo">
+
+                <span class="logo-icon">▦</span>
+
+                <span>QR Genie</span>
+
+            </a>
+
+
+            <nav class="nav-links">
+
+                <a href="index.html">
+                    Create
+                </a>
+
+                <a href="scanner.html">
+                    Scanner
+                </a>
+
+                <a href="history.html">
+                    History
+                </a>
+
+                <a href="analytics.html">
+                    Analytics
+                </a>
+
+            </nav>
+
+
+            <div class="nav-actions">
+
+                <button
+                    id="themeToggle"
+                    class="theme-toggle"
+                    title="Toggle theme"
+                >
+                    ◐
+                </button>
+
+                <a
+                    href="account.html"
+                    class="account-link"
+                >
+                    Account
+                </a>
+
+                <a
+                    href="index.html"
+                    class="create-btn"
+                >
+                    + Create QR
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         SETTINGS
+    ========================== -->
+
+    <main class="settings-page">
+
+        <div class="settings-container">
+
+
+            <!-- PAGE HEADING -->
+
+            <div class="settings-heading">
+
+                <h1>
+                    Settings
+                </h1>
+
+                <p>
+                    Customize your QR Genie experience and QR preferences.
+                </p>
+
+            </div>
+
+
+            <!-- =========================
+                 GENERAL SETTINGS
+            ========================== -->
+
+            <section class="settings-card">
+
+                <div class="section-title">
+
+                    <h3>
+                        General
+                    </h3>
+
+                    <p>
+                        Manage your basic application preferences.
+                    </p>
+
+                </div>
+
+
+                <!-- Dark Mode -->
+
+                <div class="setting-row">
+
+                    <div class="setting-info">
+
+                        <h4>
+                            Dark Mode
+                        </h4>
+
+                        <p>
+                            Use a dark appearance throughout QR Genie.
+                        </p>
+
+                    </div>
+
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="darkModeSwitch"
+                        >
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <!-- Save History -->
+
+                <div class="setting-row">
+
+                    <div class="setting-info">
+
+                        <h4>
+                            Save QR History
+                        </h4>
+
+                        <p>
+                            Automatically save generated QR codes to your history.
+                        </p>
+
+                    </div>
+
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="historySwitch"
+                            checked
+                        >
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <!-- Auto Download -->
+
+                <div class="setting-row">
+
+                    <div class="setting-info">
+
+                        <h4>
+                            Auto Download
+                        </h4>
+
+                        <p>
+                            Automatically download the QR code after generation.
+                        </p>
+
+                    </div>
+
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="autoDownloadSwitch"
+                        >
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <!-- Language -->
+
+                <div class="setting-row">
+
+                    <div class="setting-info">
+
+                        <h4>
+                            Language
+                        </h4>
+
+                        <p>
+                            Choose the language used by the interface.
+                        </p>
+
+                    </div>
+
+
+                    <select
+                        class="settings-select"
+                        id="languageSelect"
+                    >
+
+                        <option value="en">
+                            English
+                        </option>
+
+                        <option value="hi">
+                            Hindi
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 QR DEFAULTS
+            ========================== -->
+
+            <section class="settings-card">
+
+                <div class="section-title">
+
+                    <h3>
+                        QR Code Defaults
+                    </h3>
+
+                    <p>
+                        Set your preferred options for newly generated QR codes.
+                    </p>
+
+                </div>
+
+
+                <div class="default-grid">
+
+
+                    <!-- QR Size -->
+
+                    <div class="form-group">
+
+                        <label for="qrSize">
+                            QR Code Size
+                        </label>
+
+                        <select
+                            id="qrSize"
+                            class="settings-select"
+                        >
+
+                            <option value="200">
+                                200 × 200
+                            </option>
+
+                            <option value="300" selected>
+                                300 × 300
+                            </option>
+
+                            <option value="400">
+                                400 × 400
+                            </option>
+
+                            <option value="500">
+                                500 × 500
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Error Correction -->
+
+                    <div class="form-group">
+
+                        <label for="errorCorrection">
+                            Error Correction
+                        </label>
+
+                        <select
+                            id="errorCorrection"
+                            class="settings-select"
+                        >
+
+                            <option value="L">
+                                Low
+                            </option>
+
+                            <option value="M" selected>
+                                Medium
+                            </option>
+
+                            <option value="Q">
+                                Quartile
+                            </option>
+
+                            <option value="H">
+                                High
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Foreground Color -->
+
+                    <div class="form-group">
+
+                        <label>
+                            QR Color
+                        </label>
+
+                        <div class="color-control">
+
+                            <input
+                                type="color"
+                                id="qrColor"
+                                value="#111827"
+                            >
+
+                            <span
+                                class="color-value"
+                                id="qrColorValue"
+                            >
+                                #111827
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Background Color -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Background Color
+                        </label>
+
+                        <div class="color-control">
+
+                            <input
+                                type="color"
+                                id="qrBackground"
+                                value="#ffffff"
+                            >
+
+                            <span
+                                class="color-value"
+                                id="qrBackgroundValue"
+                            >
+                                #FFFFFF
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="button-row">
+
+                    <button
+                        type="button"
+                        class="reset-btn"
+                        id="resetQR"
+                    >
+                        Reset Defaults
+                    </button>
+
+                    <button
+                        type="button"
+                        class="save-btn"
+                        id="saveQR"
+                    >
+                        Save Settings
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 PRIVACY
+            ========================== -->
+
+            <section class="settings-card">
+
+                <div class="section-title">
+
+                    <h3>
+                        Privacy
+                    </h3>
+
+                    <p>
+                        Control how QR Genie stores your activity.
+                    </p>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div class="setting-info">
+
+                        <h4>
+                            Scan Analytics
+                        </h4>
+
+                        <p>
+                            Allow QR scan activity to appear in your analytics dashboard.
+                        </p>
+
+                    </div>
+
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="analyticsSwitch"
+                            checked
+                        >
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div class="setting-info">
+
+                        <h4>
+                            Local Storage
+                        </h4>
+
+                        <p>
+                            Store your preferences locally on this device.
+                        </p>
+
+                    </div>
+
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="storageSwitch"
+                            checked
+                        >
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 DANGER ZONE
+            ========================== -->
+
+            <section class="settings-card danger-zone">
+
+                <div class="section-title danger-title">
+
+                    <h3>
+                        Danger Zone
+                    </h3>
+
+                    <p>
+                        These actions can permanently remove your local QR Genie data.
+                    </p>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div class="setting-info">
+
+                        <h4>
+                            Clear QR History
+                        </h4>
+
+                        <p>
+                            Permanently remove all saved QR codes from this device.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        class="danger-btn"
+                        id="clearHistoryBtn"
+                    >
+                        Clear History
+                    </button>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div class="setting-info">
+
+                        <h4>
+                            Reset All Settings
+                        </h4>
+
+                        <p>
+                            Restore QR Genie settings to their default values.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        class="danger-btn"
+                        id="resetAllBtn"
+                    >
+                        Reset Settings
+                    </button>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <!-- Toast -->
+
+    <div
+        id="toast"
+        class="toast"
+    >
+        Settings saved successfully.
+    </div>
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
+
+    <script>
+
+        /* =========================
+           THEME
+        ========================== */
+
+        const themeToggle =
+            document.getElementById("themeToggle");
+
+        const darkModeSwitch =
+            document.getElementById("darkModeSwitch");
+
+
+        function applyTheme(theme) {
+
+            if (theme === "dark") {
+
+                document.body.classList.add("dark-mode");
+
+                darkModeSwitch.checked = true;
+
+            } else {
+
+                document.body.classList.remove("dark-mode");
+
+                darkModeSwitch.checked = false;
+
+            }
+
+        }
+
+
+        const savedTheme =
+            localStorage.getItem("qr-genie-theme") || "light";
+
+
+        applyTheme(savedTheme);
+
+
+        themeToggle.addEventListener("click", () => {
+
+            const newTheme =
+                document.body.classList.contains("dark-mode")
+                    ? "light"
+                    : "dark";
+
+
+            localStorage.setItem(
+                "qr-genie-theme",
+                newTheme
+            );
+
+
+            applyTheme(newTheme);
+
+        });
+
+
+        darkModeSwitch.addEventListener("change", () => {
+
+            const newTheme =
+                darkModeSwitch.checked
+                    ? "dark"
+                    : "light";
+
+
+            localStorage.setItem(
+                "qr-genie-theme",
+                newTheme
+            );
+
+
+            applyTheme(newTheme);
+
+        });
+
+
+        /* =========================
+           LOAD SETTINGS
+        ========================== */
+
+        const settings =
+            JSON.parse(
+                localStorage.getItem("qr-genie-settings")
+            ) || {};
+
+
+        document.getElementById("historySwitch").checked =
+            settings.saveHistory !== false;
+
+
+        document.getElementById("autoDownloadSwitch").checked =
+            settings.autoDownload === true;
+
+
+        document.getElementById("analyticsSwitch").checked =
+            settings.analytics !== false;
+
+
+        document.getElementById("storageSwitch").checked =
+            settings.localStorage !== false;
+
+
+        document.getElementById("qrSize").value =
+            settings.qrSize || "300";
+
+
+        document.getElementById("errorCorrection").value =
+            settings.errorCorrection || "M";
+
+
+        document.getElementById("qrColor").value =
+            settings.qrColor || "#111827";
+
+
+        document.getElementById("qrBackground").value =
+            settings.qrBackground || "#ffffff";
+
+
+        /* =========================
+           COLOR DISPLAY
+        ========================== */
+
+        const qrColor =
+            document.getElementById("qrColor");
+
+        const qrColorValue =
+            document.getElementById("qrColorValue");
+
+
+        qrColor.addEventListener("input", () => {
+
+            qrColorValue.textContent =
+                qrColor.value.toUpperCase();
+
+        });
+
+
+        const qrBackground =
+            document.getElementById("qrBackground");
+
+        const qrBackgroundValue =
+            document.getElementById("qrBackgroundValue");
+
+
+        qrBackground.addEventListener("input", () => {
+
+            qrBackgroundValue.textContent =
+                qrBackground.value.toUpperCase();
+
+        });
+
+
+        /* =========================
+           SAVE SETTINGS
+        ========================== */
+
+        document
+            .getElementById("saveQR")
+            .addEventListener("click", () => {
+
+                const newSettings = {
+
+                    saveHistory:
+                        document.getElementById(
+                            "historySwitch"
+                        ).checked,
+
+                    autoDownload:
+                        document.getElementById(
+                            "autoDownloadSwitch"
+                        ).checked,
+
+                    analytics:
+                        document.getElementById(
+                            "analyticsSwitch"
+                        ).checked,
+
+                    localStorage:
+                        document.getElementById(
+                            "storageSwitch"
+                        ).checked,
+
+                    qrSize:
+                        document.getElementById(
+                            "qrSize"
+                        ).value,
+
+                    errorCorrection:
+                        document.getElementById(
+                            "errorCorrection"
+                        ).value,
+
+                    qrColor:
+                        document.getElementById(
+                            "qrColor"
+                        ).value,
+
+                    qrBackground:
+                        document.getElementById(
+                            "qrBackground"
+                        ).value
+
+                };
+
+
+                localStorage.setItem(
+                    "qr-genie-settings",
+                    JSON.stringify(newSettings)
+                );
+
+
+                showToast(
+                    "Settings saved successfully."
+                );
+
+            });
+
+
+        /* =========================
+           RESET QR SETTINGS
+        ========================== */
+
+        document
+            .getElementById("resetQR")
+            .addEventListener("click", () => {
+
+                document.getElementById("qrSize").value =
+                    "300";
+
+                document.getElementById("errorCorrection").value =
+                    "M";
+
+                document.getElementById("qrColor").value =
+                    "#111827";
+
+                document.getElementById("qrBackground").value =
+                    "#ffffff";
+
+
+                qrColorValue.textContent =
+                    "#111827";
+
+                qrBackgroundValue.textContent =
+                    "#FFFFFF";
+
+
+                showToast(
+                    "QR defaults restored."
+                );
+
+            });
+
+
+        /* =========================
+           CLEAR HISTORY
+        ========================== */
+
+        document
+            .getElementById("clearHistoryBtn")
+            .addEventListener("click", () => {
+
+                const confirmClear =
+                    confirm(
+                        "Are you sure you want to clear your QR history?"
+                    );
+
+
+                if (!confirmClear) {
+                    return;
+                }
+
+
+                localStorage.removeItem(
+                    "qr-genie-history"
+                );
+
+
+                showToast(
+                    "QR history cleared."
+                );
+
+            });
+
+
+        /* =========================
+           RESET ALL
+        ========================== */
+
+        document
+            .getElementById("resetAllBtn")
+            .addEventListener("click", () => {
+
+                const confirmReset =
+                    confirm(
+                        "Reset all QR Genie settings?"
+                    );
+
+
+                if (!confirmReset) {
+                    return;
+                }
+
+
+                localStorage.removeItem(
+                    "qr-genie-settings"
+                );
+
+                localStorage.removeItem(
+                    "qr-genie-save-history"
+                );
+
+                localStorage.setItem(
+                    "qr-genie-theme",
+                    "light"
+                );
+
+
+                location.reload();
+
+            });
+
+
+        /* =========================
+           TOAST
+        ========================== */
+
+        function showToast(message) {
+
+            const toast =
+                document.getElementById("toast");
+
+
+            toast.textContent =
+                message;
+
+
+            toast.classList.add("show");
+
+
+            setTimeout(() => {
+
+                toast.classList.remove("show");
+
+            }, 2500);
+
+        }
+
+    </script>
+
+</body>
+</html>

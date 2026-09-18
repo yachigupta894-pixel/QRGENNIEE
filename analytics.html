@@ -1,0 +1,1926 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>QR Genie — Analytics</title>
+
+
+  <!-- Google Fonts -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+
+  <!-- Main CSS -->
+
+  <link
+    rel="stylesheet"
+    href="css/style.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="css/responsive.css"
+  >
+
+
+  <style>
+
+    /* =========================================================
+       QR GENIE — ANALYTICS PAGE
+    ========================================================= */
+
+    :root {
+
+      --ink: #14101f;
+
+      --surface: #1e1830;
+
+      --surface-raised: #261f3d;
+
+      --gold: #e8b85c;
+
+      --gold-soft: #f0cd85;
+
+      --violet: #8b7ce0;
+
+      --text: #f2eee6;
+
+      --muted: #a79fc2;
+
+      --line: rgba(242, 238, 230, 0.1);
+
+      --success: #72d6a1;
+
+      --danger: #ef7777;
+
+      --radius-sm: 10px;
+
+      --radius-md: 16px;
+
+      --radius-lg: 22px;
+
+    }
+
+
+    /* LIGHT THEME */
+
+    [data-theme="light"] {
+
+      --ink: #faf8f4;
+
+      --surface: #ffffff;
+
+      --surface-raised: #f3eee2;
+
+      --text: #1e1830;
+
+      --muted: #6b6280;
+
+      --line: rgba(30, 24, 48, 0.1);
+
+    }
+
+
+    /* =========================================================
+       GLOBAL
+    ========================================================= */
+
+    * {
+      box-sizing: border-box;
+    }
+
+
+    html,
+    body {
+
+      margin: 0;
+
+      padding: 0;
+
+      background: var(--ink);
+
+      color: var(--text);
+
+      font-family: 'Manrope', sans-serif;
+
+      scroll-behavior: smooth;
+
+    }
+
+
+    body {
+      overflow-x: hidden;
+    }
+
+
+    h1,
+    h2,
+    h3 {
+
+      font-family: 'Fraunces', serif;
+
+      font-weight: 500;
+
+      margin: 0;
+
+      letter-spacing: -0.01em;
+
+    }
+
+
+    a {
+
+      color: inherit;
+
+      text-decoration: none;
+
+    }
+
+
+    button,
+    select {
+
+      font-family: inherit;
+
+    }
+
+
+    .wrap {
+
+      max-width: 1120px;
+
+      margin: 0 auto;
+
+      padding: 0 32px;
+
+    }
+
+
+    /* =========================================================
+       HEADER
+    ========================================================= */
+
+    header {
+
+      position: sticky;
+
+      top: 0;
+
+      z-index: 50;
+
+      background: color-mix(
+        in srgb,
+        var(--ink) 88%,
+        transparent
+      );
+
+      backdrop-filter: blur(10px);
+
+      border-bottom: 1px solid var(--line);
+
+    }
+
+
+    .nav-row {
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      height: 76px;
+
+    }
+
+
+    .brand {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 10px;
+
+      font-family: 'Fraunces', serif;
+
+      font-size: 1.3rem;
+
+      font-weight: 600;
+
+    }
+
+
+    .brand-mark {
+
+      width: 30px;
+
+      height: 30px;
+
+      flex-shrink: 0;
+
+    }
+
+
+    nav.links {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 36px;
+
+    }
+
+
+    nav.links .item {
+
+      font-size: 0.95rem;
+
+      color: var(--muted);
+
+      transition: color 0.15s ease;
+
+      position: relative;
+
+    }
+
+
+    nav.links .item:hover,
+    nav.links .item:focus-visible {
+
+      color: var(--text);
+
+    }
+
+
+    /* ACTIVE ANALYTICS */
+
+    nav.links .item.active {
+
+      color: var(--text);
+
+    }
+
+
+    nav.links .item.active::after {
+
+      content: "";
+
+      position: absolute;
+
+      left: 0;
+
+      right: 0;
+
+      bottom: -10px;
+
+      height: 2px;
+
+      background: var(--gold);
+
+      border-radius: 999px;
+
+    }
+
+
+    .nav-actions {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 14px;
+
+    }
+
+
+    .icon-btn {
+
+      width: 40px;
+
+      height: 40px;
+
+      border-radius: 50%;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      background: var(--surface);
+
+      border: 1px solid var(--line);
+
+      cursor: pointer;
+
+      color: var(--text);
+
+      transition:
+        background 0.15s ease,
+        transform 0.15s ease;
+
+    }
+
+
+    .icon-btn:hover {
+
+      background: var(--surface-raised);
+
+      transform: translateY(-1px);
+
+    }
+
+
+    .btn {
+
+      display: inline-flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      gap: 8px;
+
+      padding: 11px 20px;
+
+      border-radius: 999px;
+
+      font-size: 0.92rem;
+
+      font-weight: 600;
+
+      cursor: pointer;
+
+      border: 1px solid transparent;
+
+      transition:
+        transform 0.15s ease,
+        background 0.15s ease;
+
+    }
+
+
+    .btn:active {
+
+      transform: scale(0.97);
+
+    }
+
+
+    .btn-gold {
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--gold-soft),
+          var(--gold)
+        );
+
+      color: #1c1408;
+
+    }
+
+
+    .btn-gold:hover {
+
+      filter: brightness(1.06);
+
+    }
+
+
+    /* =========================================================
+       ANALYTICS PAGE
+    ========================================================= */
+
+    .analytics-page {
+
+      padding: 72px 0 100px;
+
+    }
+
+
+    .page-head {
+
+      display: flex;
+
+      align-items: flex-end;
+
+      justify-content: space-between;
+
+      gap: 30px;
+
+      margin-bottom: 38px;
+
+    }
+
+
+    .eyebrow {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 8px;
+
+      color: var(--gold);
+
+      font-size: 0.9rem;
+
+      font-weight: 600;
+
+      margin-bottom: 14px;
+
+    }
+
+
+    .eyebrow svg {
+
+      width: 16px;
+
+      height: 16px;
+
+    }
+
+
+    .page-head h1 {
+
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+
+      line-height: 1.05;
+
+    }
+
+
+    .page-description {
+
+      margin-top: 14px;
+
+      max-width: 610px;
+
+      color: var(--muted);
+
+      font-size: 1rem;
+
+      line-height: 1.6;
+
+    }
+
+
+    /* DATE FILTER */
+
+    .date-filter {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 10px;
+
+      flex-shrink: 0;
+
+    }
+
+
+    .date-select {
+
+      padding: 12px 38px 12px 16px;
+
+      background: var(--surface);
+
+      color: var(--text);
+
+      border: 1px solid var(--line);
+
+      border-radius: 999px;
+
+      outline: none;
+
+      cursor: pointer;
+
+      font-size: 0.9rem;
+
+    }
+
+
+    .date-select:focus {
+
+      border-color:
+        rgba(232, 184, 92, 0.5);
+
+    }
+
+
+    /* =========================================================
+       STAT CARDS
+    ========================================================= */
+
+    .stats-grid {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(4, 1fr);
+
+      gap: 18px;
+
+      margin-bottom: 22px;
+
+    }
+
+
+    .stat-card {
+
+      background: var(--surface);
+
+      border: 1px solid var(--line);
+
+      border-radius: var(--radius-md);
+
+      padding: 24px;
+
+      transition:
+        transform 0.18s ease,
+        border-color 0.18s ease;
+
+    }
+
+
+    .stat-card:hover {
+
+      transform: translateY(-3px);
+
+      border-color:
+        color-mix(
+          in srgb,
+          var(--gold) 45%,
+          var(--line)
+        );
+
+    }
+
+
+    .stat-icon {
+
+      width: 42px;
+
+      height: 42px;
+
+      border-radius: 12px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      background: var(--surface-raised);
+
+      color: var(--gold);
+
+      margin-bottom: 18px;
+
+    }
+
+
+    .stat-icon svg {
+
+      width: 20px;
+
+      height: 20px;
+
+    }
+
+
+    .stat-label {
+
+      color: var(--muted);
+
+      font-size: 0.78rem;
+
+      margin-bottom: 6px;
+
+    }
+
+
+    .stat-value {
+
+      font-family: 'Fraunces', serif;
+
+      font-size: 2rem;
+
+      line-height: 1;
+
+    }
+
+
+    .stat-change {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 5px;
+
+      margin-top: 10px;
+
+      font-size: 0.73rem;
+
+      font-weight: 600;
+
+      color: var(--success);
+
+    }
+
+
+    .stat-change svg {
+
+      width: 13px;
+
+      height: 13px;
+
+    }
+
+
+    /* =========================================================
+       ANALYTICS GRID
+    ========================================================= */
+
+    .analytics-grid {
+
+      display: grid;
+
+      grid-template-columns: 1.5fr 1fr;
+
+      gap: 22px;
+
+      margin-bottom: 22px;
+
+    }
+
+
+    .panel {
+
+      background: var(--surface);
+
+      border: 1px solid var(--line);
+
+      border-radius: var(--radius-lg);
+
+      overflow: hidden;
+
+    }
+
+
+    .panel-head {
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      padding: 22px 24px;
+
+      border-bottom: 1px solid var(--line);
+
+    }
+
+
+    .panel-head h2 {
+
+      font-family: 'Manrope', sans-serif;
+
+      font-size: 1rem;
+
+      font-weight: 700;
+
+    }
+
+
+    .panel-head p {
+
+      margin: 4px 0 0;
+
+      color: var(--muted);
+
+      font-size: 0.76rem;
+
+    }
+
+
+    /* =========================================================
+       BAR CHART
+    ========================================================= */
+
+    .chart-area {
+
+      padding: 26px 24px 24px;
+
+    }
+
+
+    .chart {
+
+      height: 250px;
+
+      display: flex;
+
+      align-items: flex-end;
+
+      gap: 14px;
+
+      position: relative;
+
+      padding:
+        0 10px 32px;
+
+    }
+
+
+    .chart::before {
+
+      content: "";
+
+      position: absolute;
+
+      left: 0;
+
+      right: 0;
+
+      top: 0;
+
+      bottom: 32px;
+
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0,
+          transparent 49px,
+          var(--line) 50px
+        );
+
+      pointer-events: none;
+
+    }
+
+
+    .bar-item {
+
+      flex: 1;
+
+      height: 100%;
+
+      display: flex;
+
+      flex-direction: column;
+
+      justify-content: flex-end;
+
+      align-items: center;
+
+      position: relative;
+
+      z-index: 1;
+
+    }
+
+
+    .bar {
+
+      width: 100%;
+
+      max-width: 42px;
+
+      min-height: 8px;
+
+      border-radius:
+        8px 8px 4px 4px;
+
+      background:
+        linear-gradient(
+          to top,
+          var(--violet),
+          var(--gold)
+        );
+
+      transition:
+        height 0.5s ease,
+        filter 0.2s ease;
+
+    }
+
+
+    .bar:hover {
+
+      filter: brightness(1.15);
+
+    }
+
+
+    .bar-value {
+
+      margin-bottom: 7px;
+
+      font-size: 0.68rem;
+
+      color: var(--muted);
+
+    }
+
+
+    .bar-label {
+
+      position: absolute;
+
+      bottom: 0;
+
+      font-size: 0.68rem;
+
+      color: var(--muted);
+
+    }
+
+
+    /* =========================================================
+       DEVICE / SCAN TYPE
+    ========================================================= */
+
+    .breakdown {
+
+      padding: 22px 24px;
+
+    }
+
+
+    .breakdown-item {
+
+      margin-bottom: 22px;
+
+    }
+
+
+    .breakdown-item:last-child {
+
+      margin-bottom: 0;
+
+    }
+
+
+    .breakdown-top {
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      margin-bottom: 8px;
+
+    }
+
+
+    .breakdown-name {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 9px;
+
+      font-size: 0.82rem;
+
+    }
+
+
+    .breakdown-dot {
+
+      width: 8px;
+
+      height: 8px;
+
+      border-radius: 50%;
+
+      background: var(--gold);
+
+    }
+
+
+    .breakdown-percent {
+
+      font-size: 0.78rem;
+
+      color: var(--muted);
+
+    }
+
+
+    .progress {
+
+      height: 7px;
+
+      background: var(--surface-raised);
+
+      border-radius: 999px;
+
+      overflow: hidden;
+
+    }
+
+
+    .progress-bar {
+
+      height: 100%;
+
+      border-radius: inherit;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--violet),
+          var(--gold)
+        );
+
+    }
+
+
+    /* =========================================================
+       TOP QR CODES
+    ========================================================= */
+
+    .top-codes {
+
+      padding: 8px 24px 18px;
+
+    }
+
+
+    .code-row {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 14px;
+
+      padding: 15px 0;
+
+      border-bottom: 1px solid var(--line);
+
+    }
+
+
+    .code-row:last-child {
+
+      border-bottom: none;
+
+    }
+
+
+    .mini-qr {
+
+      width: 48px;
+
+      height: 48px;
+
+      flex-shrink: 0;
+
+      background: #ffffff;
+
+      border-radius: 9px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+    }
+
+
+    .mini-qr-grid {
+
+      width: 34px;
+
+      height: 34px;
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(4, 1fr);
+
+      grid-template-rows:
+        repeat(4, 1fr);
+
+      gap: 2px;
+
+    }
+
+
+    .mini-qr-grid span {
+
+      background: #1e1830;
+
+      border-radius: 1px;
+
+    }
+
+
+    .mini-qr-grid span:nth-child(2),
+    .mini-qr-grid span:nth-child(7),
+    .mini-qr-grid span:nth-child(12),
+    .mini-qr-grid span:nth-child(15) {
+
+      background: transparent;
+
+    }
+
+
+    .code-info {
+
+      min-width: 0;
+
+      flex: 1;
+
+    }
+
+
+    .code-name {
+
+      font-size: 0.84rem;
+
+      font-weight: 700;
+
+      margin-bottom: 4px;
+
+      white-space: nowrap;
+
+      overflow: hidden;
+
+      text-overflow: ellipsis;
+
+    }
+
+
+    .code-url {
+
+      color: var(--muted);
+
+      font-size: 0.72rem;
+
+      white-space: nowrap;
+
+      overflow: hidden;
+
+      text-overflow: ellipsis;
+
+    }
+
+
+    .scan-number {
+
+      flex-shrink: 0;
+
+      text-align: right;
+
+    }
+
+
+    .scan-number strong {
+
+      display: block;
+
+      font-family: 'Fraunces', serif;
+
+      font-size: 1.25rem;
+
+    }
+
+
+    .scan-number span {
+
+      color: var(--muted);
+
+      font-size: 0.68rem;
+
+    }
+
+
+    /* =========================================================
+       RECENT SCANS
+    ========================================================= */
+
+    .recent-panel {
+
+      margin-top: 22px;
+
+    }
+
+
+    .table-wrapper {
+
+      overflow-x: auto;
+
+    }
+
+
+    .scan-table {
+
+      width: 100%;
+
+      border-collapse: collapse;
+
+    }
+
+
+    .scan-table th {
+
+      padding: 14px 24px;
+
+      text-align: left;
+
+      color: var(--muted);
+
+      font-size: 0.72rem;
+
+      font-weight: 600;
+
+      text-transform: uppercase;
+
+      letter-spacing: 0.05em;
+
+      border-bottom: 1px solid var(--line);
+
+    }
+
+
+    .scan-table td {
+
+      padding: 17px 24px;
+
+      font-size: 0.82rem;
+
+      border-bottom: 1px solid var(--line);
+
+    }
+
+
+    .scan-table tr:last-child td {
+
+      border-bottom: none;
+
+    }
+
+
+    .scan-table tr:hover td {
+
+      background:
+        color-mix(
+          in srgb,
+          var(--surface-raised) 40%,
+          transparent
+        );
+
+    }
+
+
+    .device-badge {
+
+      display: inline-flex;
+
+      align-items: center;
+
+      gap: 6px;
+
+      padding: 5px 9px;
+
+      border-radius: 999px;
+
+      background: var(--surface-raised);
+
+      color: var(--muted);
+
+      font-size: 0.68rem;
+
+    }
+
+
+    .device-badge svg {
+
+      width: 12px;
+
+      height: 12px;
+
+    }
+
+
+    /* =========================================================
+       EMPTY STATE
+    ========================================================= */
+
+    .empty-analytics {
+
+      text-align: center;
+
+      padding: 75px 25px;
+
+    }
+
+
+    .empty-icon {
+
+      width: 64px;
+
+      height: 64px;
+
+      margin: 0 auto 20px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      border-radius: 18px;
+
+      background: var(--surface-raised);
+
+      color: var(--gold);
+
+    }
+
+
+    .empty-icon svg {
+
+      width: 28px;
+
+      height: 28px;
+
+    }
+
+
+    .empty-analytics h2 {
+
+      font-size: 1.55rem;
+
+      margin-bottom: 10px;
+
+    }
+
+
+    .empty-analytics p {
+
+      margin: 0 auto 24px;
+
+      max-width: 430px;
+
+      color: var(--muted);
+
+      font-size: 0.9rem;
+
+      line-height: 1.6;
+
+    }
+
+
+    /* =========================================================
+       FOOTER
+    ========================================================= */
+
+    footer {
+
+      border-top: 1px solid var(--line);
+
+      padding: 40px 0;
+
+    }
+
+
+    .footer-row {
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      color: var(--muted);
+
+      font-size: 0.85rem;
+
+    }
+
+
+    .footer-row .brand {
+
+      font-size: 1rem;
+
+    }
+
+
+    .footer-links {
+
+      display: flex;
+
+      gap: 24px;
+
+    }
+
+
+    .footer-links a:hover {
+
+      color: var(--text);
+
+    }
+
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+
+    @media (max-width: 950px) {
+
+      .stats-grid {
+
+        grid-template-columns:
+          repeat(2, 1fr);
+
+      }
+
+
+      .analytics-grid {
+
+        grid-template-columns: 1fr;
+
+      }
+
+    }
+
+
+    @media (max-width: 850px) {
+
+      nav.links {
+
+        gap: 18px;
+
+      }
+
+
+      .nav-actions .btn {
+
+        display: none;
+
+      }
+
+
+      .page-head {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+      }
+
+
+      .date-filter {
+
+        width: 100%;
+
+      }
+
+
+      .date-select {
+
+        width: 100%;
+
+      }
+
+    }
+
+
+    @media (max-width: 650px) {
+
+      .wrap {
+
+        padding: 0 20px;
+
+      }
+
+
+      .nav-row {
+
+        height: 68px;
+
+      }
+
+
+      nav.links {
+
+        display: none;
+
+      }
+
+
+      .analytics-page {
+
+        padding: 48px 0 70px;
+
+      }
+
+
+      .page-head h1 {
+
+        font-size: 2.5rem;
+
+      }
+
+
+      .stats-grid {
+
+        grid-template-columns: 1fr;
+
+      }
+
+
+      .stat-card {
+
+        padding: 20px;
+
+      }
+
+
+      .chart-area {
+
+        padding: 20px 15px;
+
+      }
+
+
+      .chart {
+
+        gap: 7px;
+
+      }
+
+
+      .panel-head {
+
+        padding: 19px;
+
+      }
+
+
+      .breakdown {
+
+        padding: 20px;
+
+      }
+
+
+      .top-codes {
+
+        padding-left: 19px;
+
+        padding-right: 19px;
+
+      }
+
+
+      .scan-table th,
+      .scan-table td {
+
+        padding-left: 15px;
+
+        padding-right: 15px;
+
+      }
+
+
+      .footer-row {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 20px;
+
+      }
+
+
+      .footer-links {
+
+        flex-wrap: wrap;
+
+        gap: 14px 20px;
+
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body data-theme="dark">
+
+
+  <!-- =======================================================
+       HEADER
+  ======================================================== -->
+
+  <header>
+
+    <div class="wrap nav-row">
+
+
+      <!-- BRAND -->
+
+      <a
+        class="brand"
+        href="index.html"
+      >
+
+        <svg
+          class="brand-mark"
+          viewBox="0 0 32 32"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+
+          <rect
+            x="4"
+            y="4"
+            width="9"
+            height="9"
+            rx="2"
+            stroke="#e8b85c"
+            stroke-width="2"
+          />
+
+          <rect
+            x="19"
+            y="4"
+            width="9"
+            height="9"
+            rx="2"
+            stroke="#e8b85c"
+            stroke-width="2"
+          />
+
+          <rect
+            x="4"
+            y="19"
+            width="9"
+            height="9"
+            rx="2"
+            stroke="#e8b85c"
+            stroke-width="2"
+          />
+
+          <rect
+            x="20.5"
+            y="20.5"
+            width="6"
+            height="6"
+            rx="1.5"
+            fill="#e8b85c"
+          />
+
+        </svg>
+
+        QR Genie
+
+      </a>
+
+
+      <!-- NAVIGATION -->
+
+      <nav class="links">
+
+        <a
+          class="item"
+          href="create.html"
+        >
+          Create
+        </a>
+
+
+        <a
+          class="item"
+          href="scanner.html"
+        >
+          Scan
+        </a>
+
+
+        <a
+          class="item"
+          href="history.html"
+        >
+          History
+        </a>
+
+
+        <a
+          class="item active"
+          href="analytics.html"
+        >
+          Analytics
+        </a>
+
+      </nav>
+
+
+      <!-- ACTIONS -->
+
+      <div class="nav-actions">
+
+
+        <!-- THEME -->
+
+        <button
+          class="icon-btn"
+          id="themeToggle"
+          aria-label="Toggle dark mode"
+        >
+
+          <svg
+            id="themeIcon"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+
+            <path
+              d="M21 12.79A9 9 0 1 1 11.21 3
+              7 7 0 0 0 21 12.79z"
+            />
+
+          </svg>
+
+        </button>
+
+
+        <!-- ACCOUNT -->
+
+        <a
+          class="icon-btn"
+          href="account.html"
+          aria-label="Account"
+        >
+
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+
+            <path
+              d="M20 21v-2a4 4 0 0 0-4-4H8
+              a4 4 0 0 0-4 4v2"
+            />
+
+            <circle
+              cx="12"
+              cy="7"
+              r="4"
+            />
+
+          </svg>
+
+        </a>
+
+
+        <!-- CREATE -->
+
+        <a
+          class="btn btn-gold"
+          href="create.html"
+        >
+          Create a QR
+        </a>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- =======================================================
+       MAIN
+  ======================================================== -->
+
+  <main>
+
+    <section class="analytics-page wrap">
+
+
+      <!-- =====================================================
+           PAGE HEADER
+      ====================================================== -->
+
+      <div class="page-head">
+
+
+        <div>
+
+          <div class="eyebrow">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+
+              <path
+                d="M3 3v18h18"
+              />
+
+              <path
+                d="M7 15l4-4 3 3 5-6"
+              />
+
+            </svg>
+
+            QR performance
+
+          </div>
+
+
+          <h1>
+            Analytics
+          </h1>
+
+
+          <p class="page-description">
+
+            Understand how your QR codes are performing.
+            Track scans, activity, devices, and your most
+            frequently used QR codes in one place.
+
+          </p>
+
+        </div>
+
+
+        <!-- DATE RANGE -->
+
+        <div class="date-filter">
+
+          <select
+            id="dateRange"
+            class="date-select"
+            aria-label="Select date range"
+          >
+
+            <option value="7">
+              Last 7 days
+            </option>
+
+            <option value="30" selected>
+              Last 30 days
+            </option>
+
+            <option value="90">
+              Last 90 days
+            </option>
+
+            <option value="all">
+              All time
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <!-- =====================================================
+           STATISTICS
+      ====================================================== -->
+
+      <div class="stats-grid">
+
+
+        <!-- TOTAL QR -->
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+
+              <rect
+                x="3"
+                y="3"
+                width="7"
+                height="7"
+              />
+
+              <rect
+                x="14"
+                y="3"
+                width="7"
+                height="7"
+              />
+
+              <rect
+                x="3"
+                y="14"
+                width="7"
+                height="7"
+              />
+
+              <path
+                d="M14 14h3v3h-3z"
+              />
+
+              <path d="M20 14v3" />
+
+              <path d="M14 20h3" />
+
+              <path d="M20 20v.01" />
+
+            </svg>
+
+          </div>
+
+
+          <div class="stat-label">
+            QR codes created
+          </div>
+
+
+          <div
+            class="stat-value"
+            id="totalQr"
+          >
+            24
+          </div>
+
+
+          <div class="stat-change">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+
+              <path d="M12 19V5" />
+
+              <path d="m5 12 7-7 7 7" />
+
+            </svg>
+
+            12% this month
+
+          </div>
+
+        </div>
+
+
+        <!-- TOTAL SCANS -->
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+```

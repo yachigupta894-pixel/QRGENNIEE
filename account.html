@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Account | QR Genie</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Responsive CSS -->
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <style>
+        /* =========================
+           ACCOUNT PAGE
+        ========================= */
+
+        .account-page {
+            min-height: calc(100vh - 80px);
+            padding: 50px 20px 70px;
+        }
+
+        .account-container {
+            width: 100%;
+            max-width: 1050px;
+            margin: auto;
+        }
+
+        .account-heading {
+            margin-bottom: 30px;
+        }
+
+        .account-heading h1 {
+            font-family: "Fraunces", serif;
+            font-size: 42px;
+            margin: 0 0 8px;
+        }
+
+        .account-heading p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 15px;
+        }
+
+        /* Profile Card */
+
+        .profile-card {
+            background: var(--card-bg, #ffffff);
+            border: 1px solid var(--border-color, #e5e7eb);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 22px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .profile-top {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .profile-avatar {
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .profile-info h2 {
+            margin: 0 0 6px;
+            font-size: 25px;
+        }
+
+        .profile-info p {
+            margin: 0 0 8px;
+            color: #6b7280;
+        }
+
+        .account-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 11px;
+            border-radius: 20px;
+            background: rgba(79, 172, 254, 0.12);
+            color: #2188df;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* Sections */
+
+        .account-section {
+            background: var(--card-bg, #ffffff);
+            border: 1px solid var(--border-color, #e5e7eb);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 22px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        }
+
+        .section-title {
+            margin-bottom: 24px;
+        }
+
+        .section-title h3 {
+            margin: 0 0 5px;
+            font-size: 20px;
+        }
+
+        .section-title p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        /* Form */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .form-group input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 13px 15px;
+            border-radius: 12px;
+            border: 1px solid #dfe3e8;
+            background: #f9fafb;
+            font-family: "Manrope", sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.12);
+        }
+
+        .form-group input:disabled {
+            cursor: not-allowed;
+            opacity: 0.75;
+        }
+
+        .save-btn {
+            margin-top: 22px;
+            border: none;
+            padding: 13px 22px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #4facfe, #00c6ff);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: "Manrope", sans-serif;
+            transition: 0.2s ease;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.25);
+        }
+
+        /* Settings */
+
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 18px 0;
+            border-bottom: 1px solid #edf0f2;
+        }
+
+        .setting-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .setting-info h4 {
+            margin: 0 0 5px;
+            font-size: 15px;
+        }
+
+        .setting-info p {
+            margin: 0;
+            color: #777f89;
+            font-size: 13px;
+        }
+
+        /* Toggle */
+
+        .switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            inset: 0;
+            background: #d1d5db;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        .slider::before {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            left: 3px;
+            top: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.25s;
+        }
+
+        .switch input:checked + .slider {
+            background: #4facfe;
+        }
+
+        .switch input:checked + .slider::before {
+            transform: translateX(22px);
+        }
+
+        /* Security */
+
+        .security-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 17px 0;
+            border-bottom: 1px solid #edf0f2;
+        }
+
+        .security-item:last-child {
+            border-bottom: none;
+        }
+
+        .security-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .security-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: rgba(79, 172, 254, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+        }
+
+        .security-left h4 {
+            margin: 0 0 4px;
+            font-size: 14px;
+        }
+
+        .security-left p {
+            margin: 0;
+            color: #777f89;
+            font-size: 12px;
+        }
+
+        .secondary-btn {
+            border: 1px solid #dfe3e8;
+            background: transparent;
+            padding: 9px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-family: "Manrope", sans-serif;
+            font-size: 12px;
+        }
+
+        .secondary-btn:hover {
+            border-color: #4facfe;
+            color: #2188df;
+        }
+
+        /* Logout */
+
+        .logout-section {
+            border: 1px solid #ffd8d8;
+            background: #fffafa;
+        }
+
+        .logout-btn {
+            border: none;
+            padding: 12px 20px;
+            border-radius: 11px;
+            background: #ef4444;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: "Manrope", sans-serif;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+        }
+
+        /* Toast */
+
+        .toast {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            background: #111827;
+            color: white;
+            padding: 13px 18px;
+            border-radius: 12px;
+            font-size: 13px;
+            opacity: 0;
+            transform: translateY(15px);
+            pointer-events: none;
+            transition: 0.3s ease;
+            z-index: 9999;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Dark Mode */
+
+        body.dark-mode .account-heading p,
+        body.dark-mode .section-title p,
+        body.dark-mode .profile-info p,
+        body.dark-mode .setting-info p,
+        body.dark-mode .security-left p {
+            color: #aab2bd;
+        }
+
+        body.dark-mode .profile-card,
+        body.dark-mode .account-section {
+            background: #161b22;
+            border-color: #2b3139;
+            box-shadow: none;
+        }
+
+        body.dark-mode .form-group input {
+            background: #0f141a;
+            color: white;
+            border-color: #303740;
+        }
+
+        body.dark-mode .setting-row,
+        body.dark-mode .security-item {
+            border-color: #292f36;
+        }
+
+        body.dark-mode .secondary-btn {
+            color: white;
+            border-color: #343b45;
+        }
+
+        body.dark-mode .logout-section {
+            background: #1b1111;
+            border-color: #4a2222;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 700px) {
+            .account-page {
+                padding: 35px 15px 50px;
+            }
+
+            .account-heading h1 {
+                font-size: 34px;
+            }
+
+            .profile-card,
+            .account-section {
+                padding: 22px;
+                border-radius: 18px;
+            }
+
+            .profile-top {
+                align-items: flex-start;
+            }
+
+            .profile-avatar {
+                width: 68px;
+                height: 68px;
+                font-size: 24px;
+            }
+
+            .profile-info h2 {
+                font-size: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width {
+                grid-column: auto;
+            }
+
+            .setting-row,
+            .security-item {
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-top {
+                flex-direction: column;
+            }
+
+            .security-item {
+                flex-direction: column;
+            }
+
+            .logout-section .setting-row {
+                flex-direction: column;
+            }
+
+            .logout-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="navbar">
+
+        <div class="nav-container">
+
+            <a href="index.html" class="logo">
+                <span class="logo-icon">▦</span>
+                <span>QR Genie</span>
+            </a>
+
+            <nav class="nav-links">
+                <a href="index.html">Create</a>
+                <a href="scanner.html">Scanner</a>
+                <a href="history.html">History</a>
+                <a href="analytics.html">Analytics</a>
+            </nav>
+
+            <div class="nav-actions">
+
+                <button id="themeToggle" class="theme-toggle" title="Toggle theme">
+                    ◐
+                </button>
+
+                <a href="account.html" class="account-link active">
+                    Account
+                </a>
+
+                <a href="index.html" class="create-btn">
+                    + Create QR
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         ACCOUNT PAGE
+    ========================== -->
+
+    <main class="account-page">
+
+        <div class="account-container">
+
+            <!-- Heading -->
+
+            <div class="account-heading">
+                <h1>Account</h1>
+                <p>Manage your profile, preferences, and account security.</p>
+            </div>
+
+
+            <!-- Profile -->
+
+            <section class="profile-card">
+
+                <div class="profile-top">
+
+                    <div class="profile-avatar" id="profileAvatar">
+                        Y
+                    </div>
+
+                    <div class="profile-info">
+
+                        <h2 id="profileName">
+                            Your Name
+                        </h2>
+
+                        <p id="profileEmail">
+                            your@email.com
+                        </p>
+
+                        <span class="account-badge">
+                            ✓ Google Account
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- Personal Information -->
+
+            <section class="account-section">
+
+                <div class="section-title">
+
+                    <h3>Personal Information</h3>
+
+                    <p>
+                        Update the information associated with your QR Genie account.
+                    </p>
+
+                </div>
+
+                <form id="profileForm">
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="firstName">
+                                First Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="firstName"
+                                placeholder="Enter your first name"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="lastName">
+                                Last Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="lastName"
+                                placeholder="Enter your last name"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group full-width">
+
+                            <label for="email">
+                                Email Address
+                            </label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                placeholder="your@email.com"
+                                disabled
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <button type="submit" class="save-btn">
+                        Save Changes
+                    </button>
+
+                </form>
+
+            </section>
+
+
+            <!-- Preferences -->
+
+            <section class="account-section">
+
+                <div class="section-title">
+
+                    <h3>Preferences</h3>
+
+                    <p>
+                        Customize your QR Genie experience.
+                    </p>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div class="setting-info">
+
+                        <h4>Dark Mode</h4>
+
+                        <p>
+                            Use a darker appearance across QR Genie.
+                        </p>
+
+                    </div>
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="darkModeSwitch"
+                        >
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div class="setting-info">
+
+                        <h4>Save QR History</h4>
+
+                        <p>
+                            Automatically save generated QR codes to your history.
+                        </p>
+
+                    </div>
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="historySwitch"
+                            checked
+                        >
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+            </section>
+
+
+            <!-- Security -->
+
+            <section class="account-section">
+
+                <div class="section-title">
+
+                    <h3>Security</h3>
+
+                    <p>
+                        Manage your account security settings.
+                    </p>
+
+                </div>
+
+
+                <div class="security-item">
+
+                    <div class="security-left">
+
+                        <div class="security-icon">
+                            🔐
+                        </div>
+
+                        <div>
+
+                            <h4>Google Sign-In</h4>
+
+                            <p>
+                                Your account is connected through Google.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <span class="account-badge">
+                        Connected
+                    </span>
+
+                </div>
+
+
+                <div class="security-item">
+
+                    <div class="security-left">
+
+                        <div class="security-icon">
+                            🛡️
+                        </div>
+
+                        <div>
+
+                            <h4>Account Protection</h4>
+
+                            <p>
+                                Your account uses secure authentication.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="secondary-btn"
+                        id="securityInfoBtn"
+                    >
+                        Learn More
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- Logout -->
+
+            <section class="account-section logout-section">
+
+                <div class="setting-row">
+
+                    <div class="setting-info">
+
+                        <h4>Sign Out</h4>
+
+                        <p>
+                            Sign out from your QR Genie account on this device.
+                        </p>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="logout-btn"
+                        id="logoutBtn"
+                    >
+                        Log Out
+                    </button>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <!-- Toast -->
+
+    <div id="toast" class="toast">
+        Changes saved successfully.
+    </div>
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
+
+    <script>
+
+        /* =========================
+           THEME
+        ========================== */
+
+        const themeToggle = document.getElementById("themeToggle");
+        const darkModeSwitch = document.getElementById("darkModeSwitch");
+
+        function applyTheme(theme) {
+
+            if (theme === "dark") {
+
+                document.body.classList.add("dark-mode");
+
+                if (darkModeSwitch) {
+                    darkModeSwitch.checked = true;
+                }
+
+            } else {
+
+                document.body.classList.remove("dark-mode");
+
+                if (darkModeSwitch) {
+                    darkModeSwitch.checked = false;
+                }
+            }
+        }
+
+
+        const savedTheme =
+            localStorage.getItem("qr-genie-theme") || "light";
+
+        applyTheme(savedTheme);
+
+
+        if (themeToggle) {
+
+            themeToggle.addEventListener("click", () => {
+
+                const newTheme =
+                    document.body.classList.contains("dark-mode")
+                        ? "light"
+                        : "dark";
+
+                localStorage.setItem(
+                    "qr-genie-theme",
+                    newTheme
+                );
+
+                applyTheme(newTheme);
+
+            });
+
+        }
+
+
+        if (darkModeSwitch) {
+
+            darkModeSwitch.addEventListener("change", () => {
+
+                const newTheme =
+                    darkModeSwitch.checked
+                        ? "dark"
+                        : "light";
+
+                localStorage.setItem(
+                    "qr-genie-theme",
+                    newTheme
+                );
+
+                applyTheme(newTheme);
+
+            });
+
+        }
+
+
+        /* =========================
+           PROFILE DATA
+        ========================== */
+
+        const savedUser =
+            JSON.parse(
+                localStorage.getItem("qr-genie-user")
+            ) || null;
+
+
+        if (savedUser) {
+
+            const name =
+                savedUser.name ||
+                savedUser.displayName ||
+                "Your Name";
+
+            const email =
+                savedUser.email ||
+                "your@email.com";
+
+
+            document.getElementById("profileName").textContent =
+                name;
+
+            document.getElementById("profileEmail").textContent =
+                email;
+
+            document.getElementById("email").value =
+                email;
+
+
+            const nameParts =
+                name.trim().split(" ");
+
+            document.getElementById("firstName").value =
+                nameParts[0] || "";
+
+            document.getElementById("lastName").value =
+                nameParts.slice(1).join(" ") || "";
+
+
+            document.getElementById("profileAvatar").textContent =
+                name.charAt(0).toUpperCase();
+
+        }
+
+
+        /* =========================
+           SAVE PROFILE
+        ========================== */
+
+        const profileForm =
+            document.getElementById("profileForm");
+
+
+        profileForm.addEventListener("submit", (event) => {
+
+            event.preventDefault();
+
+
+            const firstName =
+                document.getElementById("firstName").value.trim();
+
+            const lastName =
+                document.getElementById("lastName").value.trim();
+
+
+            const fullName =
+                `${firstName} ${lastName}`.trim();
+
+
+            const user =
+                JSON.parse(
+                    localStorage.getItem("qr-genie-user")
+                ) || {};
+
+
+            user.name =
+                fullName || "Your Name";
+
+
+            localStorage.setItem(
+                "qr-genie-user",
+                JSON.stringify(user)
+            );
+
+
+            document.getElementById("profileName").textContent =
+                user.name;
+
+            document.getElementById("profileAvatar").textContent =
+                user.name.charAt(0).toUpperCase();
+
+
+            showToast("Profile updated successfully.");
+
+        });
+
+
+        /* =========================
+           HISTORY SETTING
+        ========================== */
+
+        const historySwitch =
+            document.getElementById("historySwitch");
+
+
+        const savedHistorySetting =
+            localStorage.getItem("qr-genie-save-history");
+
+
+        if (savedHistorySetting !== null) {
+
+            historySwitch.checked =
+                savedHistorySetting === "true";
+
+        }
+
+
+        historySwitch.addEventListener("change", () => {
+
+            localStorage.setItem(
+                "qr-genie-save-history",
+                historySwitch.checked
+            );
+
+            showToast(
+                historySwitch.checked
+                    ? "QR history enabled."
+                    : "QR history disabled."
+            );
+
+        });
+
+
+        /* =========================
+           SECURITY INFO
+        ========================== */
+
+        document
+            .getElementById("securityInfoBtn")
+            .addEventListener("click", () => {
+
+                showToast(
+                    "Your account is protected with secure Google authentication."
+                );
+
+            });
+
+
+        /* =========================
+           LOGOUT
+        ========================== */
+
+        document
+            .getElementById("logoutBtn")
+            .addEventListener("click", () => {
+
+                const confirmLogout =
+                    confirm(
+                        "Are you sure you want to log out?"
+                    );
+
+
+                if (!confirmLogout) {
+                    return;
+                }
+
+
+                localStorage.removeItem("qr-genie-user");
+
+
+                window.location.href =
+                    "index.html";
+
+            });
+
+
+        /* =========================
+           TOAST
+        ========================== */
+
+        function showToast(message) {
+
+            const toast =
+                document.getElementById("toast");
+
+
+            toast.textContent =
+                message;
+
+
+            toast.classList.add("show");
+
+
+            setTimeout(() => {
+
+                toast.classList.remove("show");
+
+            }, 2500);
+
+        }
+
+    </script>
+
+</body>
+</html>
