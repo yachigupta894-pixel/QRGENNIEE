@@ -33,15 +33,15 @@ app.use(express.urlencoded({ extended: true }));
 
 
 // ===============================
-// SERVE FRONTEND
+// SERVE FRONTEND FILES
 // ===============================
 
-// Frontend files are inside the public folder
-app.use(express.static(path.join(__dirname, "public")));
+// Frontend files are directly inside the project folder
+app.use(express.static(__dirname));
 
 
 // ===============================
-// TEST ROUTE
+// TEST API ROUTE
 // ===============================
 
 app.get("/api", (req, res) => {
@@ -287,13 +287,11 @@ app.get("/api/stats", async (req, res) => {
 
 
 // ===============================
-// FRONTEND ROUTE
+// FRONTEND HOME PAGE
 // ===============================
 
 app.get("/", (req, res) => {
-  res.sendFile(
-    path.join(__dirname, "public", "index.html")
-  );
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
 
@@ -310,21 +308,18 @@ app.use((req, res) => {
 
 
 // ===============================
-// CONNECT DATABASE + START SERVER
+// CONNECT DATABASE & START SERVER
 // ===============================
 
 connectDB()
   .then(() => {
-
     app.listen(PORT, "0.0.0.0", () => {
       console.log(
         `QR Genie server running on port ${PORT}`
       );
     });
-
   })
   .catch((error) => {
-
     console.error(
       "Failed to connect to MongoDB:",
       error.message
